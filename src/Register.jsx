@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useContext } from "react";
 import { UserContext } from "./UserContext";
+import { useNavigate } from "react-router-dom";
 
 let Register = (props) => {
+  const navigate = useNavigate();
   let [state, setState] = useState({
     email: "",
     password: "",
@@ -170,7 +172,7 @@ let Register = (props) => {
           <span className="text-success">Successfully Registered</span>
         );
 
-        props.history.replace("/dashboard");
+        navigate("/dashboard");
       } else {
         setMessage(
           <span className="text-danger">Errors in database connection</span>

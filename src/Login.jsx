@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useContext } from "react";
 import { UserContext } from "./UserContext";
+import { useNavigate } from "react-router-dom";
 
 let Login = (props) => {
-  var [email, setEmail] = useState("");
-  var [password, setPassword] = useState("");
+  var [email, setEmail] = useState("aarav@gmail.com");
+  var [password, setPassword] = useState("Aarav@2020");
   let userContext = useContext(UserContext);
+  const navigate = useNavigate();
 
   let [dirty, setDirty] = useState({
     email: false,
@@ -121,7 +123,7 @@ let Login = (props) => {
           });
 
           //redirect to /dashboard
-          props.history.replace("/dashboard");
+          navigate("/dashboard");
         } else {
           setLoginMessage(
             <span className="text-danger">Invalid Login, please try again</span>
