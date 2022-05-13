@@ -41,11 +41,13 @@
     {
       "id": 1,
       "email": "scott@test.com",
-      "password": "scott123"
+      "fullName": "Scott Shaw",
+      "password": "Scott123"
     },
     {
       "id": 2,
       "email": "allen@test.com",
+      "fullName": "Allen Shaw",
       "password": "allen123"
     },
     {
@@ -57,6 +59,16 @@
       "country": "India",
       "receiveNewsLetters": true,
       "id": 3
+    },
+    {
+      "email": "saraswati101k@gmail.com",
+      "password": "Sara@123",
+      "fullName": "Saraswati Kumari",
+      "dateOfBirth": "2022-05-01",
+      "gender": "female",
+      "country": "4",
+      "receiveNewsLetters": true,
+      "id": 4
     }
   ],
   "customers": [

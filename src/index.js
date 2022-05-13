@@ -6,7 +6,6 @@ import "bootstrap/dist/js/bootstrap";
 import "bootstrap/dist/css/bootstrap.css";
 import "font-awesome/css/font-awesome.css";
 import "./index.css";
-import "./App";
 import App from "./App";
 
 ReactDOM.render(<App />, document.getElementById("root"));
