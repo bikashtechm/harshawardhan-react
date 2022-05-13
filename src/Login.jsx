@@ -42,7 +42,7 @@ let Login = (props) => {
   useEffect(() => {
     //do something
     return () => {
-      console.log("Component Unmount");
+      // console.log("Component Unmount");
     };
   }, []);
 

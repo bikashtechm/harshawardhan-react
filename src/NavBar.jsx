@@ -38,12 +38,8 @@ let NavBar = () => {
       <div className="collapse navbar-collapse" id="navbarSupportedContent">
         <ul className="navbar-nav mr-auto">
           {userContext.user.isLoggedIn ? (
-            <li className="nav-item">
-              <NavLink
-                className="nav-link"
-                to="/dashboard"
-                activeClassName="active"
-              >
+            <li className="nav-item navData.isActive">
+              <NavLink className="nav-link" to="/dashboard">
                 <i className="fa fa-dashboard"></i> Dashboard
               </NavLink>
             </li>
@@ -54,9 +50,8 @@ let NavBar = () => {
           {!userContext.user.isLoggedIn ? (
             <li>
               <NavLink
-                className="nav-link"
+                className="nav-link navData.isActive"
                 to="/"
-                activeClassName="active"
                 exact="true"
               >
                 Login
@@ -68,11 +63,7 @@ let NavBar = () => {
 
           {!userContext.user.isLoggedIn ? (
             <li>
-              <NavLink
-                className="nav-link"
-                to="/register"
-                activeClassName="active"
-              >
+              <NavLink className="nav-link navData.isActive" to="/register">
                 Register
               </NavLink>
             </li>
