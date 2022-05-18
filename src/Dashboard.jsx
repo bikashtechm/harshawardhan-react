@@ -19,7 +19,7 @@ function Dashboard() {
       let orderResponseBody = await OrderResponse.json();
 
       //Get All data from Products
-      let productResponse = await ProductsService.getchProducts();
+      let productResponse = await ProductsService.getProducts();
       if (productResponse.ok) {
         let productResponseBody = await productResponse.json();
         orderResponseBody.forEach((order) => {
@@ -35,7 +35,7 @@ function Dashboard() {
   }, [userContext.user.currentUserId]);
 
   useEffect(() => {
-    document.title = "Dashboard - eCommerce";
+    document.title = "Dashboard - eBazar";
     loadDataFromDatabase();
   }, [userContext.user.currentUserId, loadDataFromDatabase]);
 

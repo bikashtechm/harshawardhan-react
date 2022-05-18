@@ -13,7 +13,7 @@ export const ProductsService = {
     return products.find((prod) => prod.id === productId);
   },
 
-  getchProducts: () => {
+  getProducts: () => {
     return fetch("http://localhost:5000/products", {
       method: "GET",
     });
@@ -26,10 +26,18 @@ export const BrandService = {
       method: "GET",
     });
   },
+
+  getBrandByBrandId: (brands, brandId) => {
+    return brands.find((brand) => (brand.id = brandId));
+  },
 };
 
 export const CategoryService = {
   getCategory: () => {
     return fetch(`http://localhost:5000/categories`, { method: "GET" });
+  },
+
+  getCategoryByCategoryId: (category, categoryId) => {
+    return category.find((cat) => (category.id = categoryId));
   },
 };

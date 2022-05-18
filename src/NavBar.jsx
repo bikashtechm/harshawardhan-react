@@ -21,7 +21,7 @@ let NavBar = () => {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark navbar-style">
       <a className="navbar-brand" href="/#">
-        eCommerce
+        eBazar
       </a>
       <button
         className="navbar-toggler"
