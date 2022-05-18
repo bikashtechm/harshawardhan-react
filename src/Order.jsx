@@ -24,7 +24,12 @@ function Order(props) {
                 <i className="fa fa-truck m-1"></i>Buy Now
               </button>
 
-              <button className="btn btn-sm btn-danger">
+              <button
+                className="btn btn-sm btn-danger"
+                onClick={() => {
+                  props.onDeleteClick(props.orderId);
+                }}
+              >
                 <i className="fa fa-trash-o"></i> Delete
               </button>
             </div>

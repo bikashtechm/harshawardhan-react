@@ -2,10 +2,11 @@ import React, { useEffect, useContext, useState, useCallback } from "react";
 import { UserContext } from "./UserContext";
 import Order from "./Order";
 import { OrderService, ProductsService } from "./Service";
-import { Callbacks } from "jquery";
 
 function Dashboard() {
   let [orders, setOrders] = useState([]);
+  let [showOrderDeletedAlert, setshowOrderDeletedAlert] = useState(false);
+  let [showOrderPlacedAlert, setShowOrderPlacedAlert] = useState(false);
   //get context
   let userContext = useContext(UserContext);
 
@@ -61,6 +62,7 @@ function Dashboard() {
         var orderResponseBody = await orderResponse.json();
         if (orderResponse.ok) {
           console.log(orderResponseBody);
+          setShowOrderPlacedAlert(true);
           loadDataFromDatabase();
         }
       }
@@ -70,9 +72,24 @@ function Dashboard() {
   //Buy Now method ends
 
   //Delete starts
-  let onDelete = useCallback(async () => {
-    loadDataFromDatabase();
-  }, [loadDataFromDatabase]);
+  let onDeleteClick = useCallback(
+    async (orderId) => {
+      if (window.confirm("Are you sure to delete")) {
+        let orderResponse = await fetch(
+          `http://localhost:5000/orders/${orderId}`,
+          { method: "DELETE" }
+        );
+
+        if (orderResponse.ok) {
+          let orderResponseBody = await orderResponse.json();
+          console.log(orderResponseBody);
+          setshowOrderDeletedAlert(true);
+          loadDataFromDatabase();
+        }
+      }
+    },
+    [loadDataFromDatabase]
+  );
   //Delete Ends
   return (
     <div className="row">
@@ -115,6 +132,7 @@ function Dashboard() {
                   price={ord.product.price}
                   rating={ord.product.rating}
                   onBuyNowClick={onBuyNowClick}
+                  onDeleteClick={onDeleteClick}
                 />
               );
             })}
@@ -126,6 +144,37 @@ function Dashboard() {
                 {OrderService.getCart(orders).length}
               </span>
             </h5>
+            {showOrderPlacedAlert ? (
+              <div className="col-12">
+                <div
+                  className="alert alert-success alert-dismissible fade show mt-1"
+                  role="alert"
+                >
+                  Your order has been places successfully
+                  <button className="close" type="button" data-dismiss="alert">
+                    <span>&times;</span>
+                  </button>
+                </div>
+              </div>
+            ) : (
+              ""
+            )}
+
+            {showOrderDeletedAlert ? (
+              <div className="col-12">
+                <div
+                  className="alert alert-danger alert-dismissible fade show mt-1"
+                  role="alert"
+                >
+                  Your order has been deleted successfully
+                  <button className="close" type="button" data-dismiss="alert">
+                    <span>&times;</span>
+                  </button>
+                </div>
+              </div>
+            ) : (
+              ""
+            )}
             {OrderService.getCart(orders).length === 0 ? (
               <div className="text-danger">Empty Cart</div>
             ) : (
@@ -145,6 +194,7 @@ function Dashboard() {
                   price={ord.product.price}
                   rating={ord.product.rating}
                   onBuyNowClick={onBuyNowClick}
+                  onDeleteClick={onDeleteClick}
                 />
               );
             })}
