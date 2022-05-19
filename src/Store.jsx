@@ -1,10 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
 import { UserContext } from "./UserContext";
 import { BrandService, CategoryService, ProductsService } from "./Service";
+import Product from "./Product";
 
 function Store(props) {
   let [brands, setBrands] = useState([]);
-  let [category, setCategory] = useState([]);
+  let [categories, setCategories] = useState([]);
   let [products, setProducts] = useState([]);
   let userContext = useContext(UserContext);
 
@@ -24,23 +25,26 @@ function Store(props) {
       categoryResponseBody.forEach((category) => {
         category.isChecked = true;
       });
-      setCategory(categoryResponseBody);
+      setCategories(categoryResponseBody);
 
       // Get All Products
       let productResponse = await ProductsService.getProducts();
       let productResponseBody = await productResponse.json();
       if (productResponse.ok) {
         productResponseBody.forEach((product) => {
-          product.isOrdered = false;
-
-          let brandDataById = BrandService.getBrandByBrandId(
-            brands,
+          product.brandData = BrandService.getBrandByBrandId(
+            brandResponseBody,
             product.brandId
           );
-          product.brandData = brandDataById;
+          product.categoryData = CategoryService.getCategoryByCategoryId(
+            categoryResponseBody,
+            product.categoryId
+          );
+          product.isOrdered = false;
         });
       }
       setProducts(productResponseBody);
+      document.title = "Store - eBazar";
     })();
   }, []);
 
@@ -56,11 +60,11 @@ function Store(props) {
 
   // Update Category isChecked on click
   let updateCategoryChecked = (id) => {
-    let categoryData = category.map((cat) => {
+    let categoryData = categories.map((cat) => {
       if (cat.id === id) cat.isChecked = !cat.isChecked;
       return cat;
     });
-    setCategory(categoryData);
+    setCategories(categoryData);
   };
 
   return (
@@ -106,7 +110,7 @@ function Store(props) {
           <div className="my-1">
             <h5>Categories</h5>
             <ul className="list-group list-group-flush">
-              {category.map((cat) => {
+              {categories.map((cat) => {
                 return (
                   <li className="list-group-item" key={cat.id}>
                     <div className="form-check">
@@ -133,10 +137,12 @@ function Store(props) {
             </ul>
           </div>
         </div>
-        <div className="col-lg-9">
-          <div>{JSON.stringify(brands)}</div>
-          <div>{JSON.stringify(category)}</div>
-          <div>{JSON.stringify(products)}</div>
+        <div className="col-lg-9 py-2">
+          <div className="row">
+            {products.map((prod) => (
+              <Product key={prod.id} product={prod} />
+            ))}
+          </div>
         </div>
       </div>
     </div>

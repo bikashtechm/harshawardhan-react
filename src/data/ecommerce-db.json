@@ -49,7 +49,7 @@
       "productName": "Apple iPad Pro",
       "price": 12400,
       "brandId": 1,
-      "categoryId": 2,
+      "categoryId": 1,
       "rating": 5
     },
     {
@@ -89,7 +89,7 @@
       "productName": "Sony Mobile Phone",
       "price": 4848,
       "brandId": 2,
-      "categoryId": 1,
+      "categoryId": 2,
       "rating": 2
     },
     {
