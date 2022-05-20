@@ -3,10 +3,10 @@ import Login from "./Login";
 import Register from "./Register";
 import NoMatchPage from "./NoMatchPage";
 import Dashboard from "./Dashboard";
-import Store from "./Store";
 import { HashRouter, Routes, Route } from "react-router-dom";
 import NavBar from "./NavBar";
 import { UserContext } from "./UserContext";
+import Store from "./Store";
 
 function App() {
   let [user, setUser] = useState({

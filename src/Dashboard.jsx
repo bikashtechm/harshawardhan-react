@@ -1,49 +1,60 @@
 import React, { useEffect, useContext, useState, useCallback } from "react";
 import { UserContext } from "./UserContext";
 import Order from "./Order";
-import { OrderService, ProductsService } from "./Service";
+import { OrdersService, ProductsService } from "./Service";
 
 function Dashboard() {
   let [orders, setOrders] = useState([]);
-  let [showOrderDeletedAlert, setshowOrderDeletedAlert] = useState(false);
+  let [showOrderDeletedAlert, setShowOrderDeletedAlert] = useState(false);
   let [showOrderPlacedAlert, setShowOrderPlacedAlert] = useState(false);
+
   //get context
   let userContext = useContext(UserContext);
 
+  //loadDataFromDatabase function that fetches data from 'orders' array from json file
   let loadDataFromDatabase = useCallback(async () => {
-    let OrderResponse = await fetch(
-      `http://localhost:5000/orders?userId=${userContext.user.currentUserId}`,
+    //load data from database
+    let ordersResponse = await fetch(
+      `http://localhost:5000/orders?userid=${userContext.user.currentUserId}`,
       { method: "GET" }
     );
-    if (OrderResponse.ok) {
-      let orderResponseBody = await OrderResponse.json();
 
-      //Get All data from Products
-      let productResponse = await ProductsService.getProducts();
-      if (productResponse.ok) {
-        let productResponseBody = await productResponse.json();
-        orderResponseBody.forEach((order) => {
+    if (ordersResponse.ok) {
+      //status code is 200
+      let ordersResponseBody = await ordersResponse.json();
+
+      //get all data from products
+      let productsResponse = await ProductsService.fetchProducts();
+      if (productsResponse.ok) {
+        let productsResponseBody = await productsResponse.json();
+
+        //read all orders data
+        ordersResponseBody.forEach((order) => {
           order.product = ProductsService.getProductByProductId(
-            productResponseBody,
+            productsResponseBody,
             order.productId
           );
         });
 
-        setOrders(orderResponseBody);
+        console.log(ordersResponseBody);
+
+        setOrders(ordersResponseBody);
       }
     }
   }, [userContext.user.currentUserId]);
 
+  //executes only once - on initial render =  componentDidMount
   useEffect(() => {
-    document.title = "Dashboard - eBazar";
+    document.title = "Dashboard - eCommerce";
+
     loadDataFromDatabase();
   }, [userContext.user.currentUserId, loadDataFromDatabase]);
 
-  //Buy Now method starts
+  //When the user clicks on Buy Now
   let onBuyNowClick = useCallback(
     async (orderId, userId, productId, quantity) => {
-      if (window.confirm("Do you wish to place order for this product ?")) {
-        var updateOrder = {
+      if (window.confirm("Do you want to place order for this product?")) {
+        let updateOrder = {
           id: orderId,
           productId: productId,
           userId: userId,
@@ -51,7 +62,7 @@ function Dashboard() {
           isPaymentCompleted: true,
         };
 
-        var orderResponse = await fetch(
+        let orderResponse = await fetch(
           `http://localhost:5000/orders/${orderId}`,
           {
             method: "PUT",
@@ -59,67 +70,72 @@ function Dashboard() {
             headers: { "Content-type": "application/json" },
           }
         );
-        var orderResponseBody = await orderResponse.json();
+
+        let orderResponseBody = await orderResponse.json();
         if (orderResponse.ok) {
           console.log(orderResponseBody);
-          setShowOrderPlacedAlert(true);
           loadDataFromDatabase();
+          setShowOrderPlacedAlert(true);
         }
       }
     },
     [loadDataFromDatabase]
   );
-  //Buy Now method ends
 
-  //Delete starts
+  //When the user clicks on Delete button
   let onDeleteClick = useCallback(
     async (orderId) => {
-      if (window.confirm("Are you sure to delete")) {
+      if (window.confirm("Are you sure to delete this item from cart?")) {
         let orderResponse = await fetch(
           `http://localhost:5000/orders/${orderId}`,
-          { method: "DELETE" }
+          {
+            method: "DELETE",
+          }
         );
-
         if (orderResponse.ok) {
           let orderResponseBody = await orderResponse.json();
           console.log(orderResponseBody);
-          setshowOrderDeletedAlert(true);
+          setShowOrderDeletedAlert(true);
+
           loadDataFromDatabase();
         }
       }
     },
     [loadDataFromDatabase]
   );
-  //Delete Ends
+
   return (
     <div className="row">
       <div className="col-12 py-3 header">
         <h4>
-          <i className="fa fa-dashboard m-2"></i>Dashboard{" "}
-          <button className="btn btn-sm btn-info">
-            <i className="fa fa-refresh" onClick={loadDataFromDatabase}>
-              {" "}
-              Refresh
-            </i>
+          <i className="fa fa-dashboard"></i> Dashboard{" "}
+          <button
+            className="btn btn-sm btn-info"
+            onClick={loadDataFromDatabase}
+          >
+            <i className="fa fa-refresh"></i> Refresh
           </button>
         </h4>
       </div>
+
       <div className="col-12">
         <div className="row">
+          {/* previous orders starts*/}
           <div className="col-lg-6">
-            <h5 className="py-2 my-2 text-info border-bottom border-info">
-              <i className="fa fa-history m-2"></i>Previous Orders{" "}
+            <h4 className="py-2 my-2 text-info border-bottom border-info">
+              <i className="fa fa-history"></i> Previous Orders{" "}
               <span className="badge badge-info">
-                {OrderService.getPreviousOrders(orders).length}
+                {OrdersService.getPreviousOrders(orders).length}
               </span>
-            </h5>
-            {OrderService.getPreviousOrders(orders).length === 0 ? (
+            </h4>
+
+            {OrdersService.getPreviousOrders(orders).length === 0 ? (
               <div className="text-danger">No Orders</div>
             ) : (
               ""
             )}
 
-            {OrderService.getPreviousOrders(orders).map((ord) => {
+            {OrdersService.getPreviousOrders(orders).map((ord) => {
               return (
                 <Order
                   key={ord.id}
@@ -130,27 +146,30 @@ function Dashboard() {
                   quantity={ord.quantity}
                   productName={ord.product.productName}
                   price={ord.product.price}
-                  rating={ord.product.rating}
                   onBuyNowClick={onBuyNowClick}
                   onDeleteClick={onDeleteClick}
                 />
               );
             })}
           </div>
+          {/* previous orders ends*/}
+
+          {/* cart starts*/}
           <div className="col-lg-6">
-            <h5 className="py-2 my-2 text-primary border-bottom border-primary">
-              <i className="fa fa-shopping-cart m-2"></i>Cart{" "}
+            <h4 className="py-2 my-2 text-primary border-bottom border-primary">
+              <i className="fa fa-shopping-cart"></i> Cart{" "}
               <span className="badge badge-primary">
-                {OrderService.getCart(orders).length}
+                {OrdersService.getCart(orders).length}
               </span>
-            </h5>
+            </h4>
+
             {showOrderPlacedAlert ? (
               <div className="col-12">
                 <div
                   className="alert alert-success alert-dismissible fade show mt-1"
                   role="alert"
                 >
-                  Your order has been places successfully
+                  You Order has been placed.
                   <button className="close" type="button" data-dismiss="alert">
                     <span>&times;</span>
                   </button>
@@ -166,7 +185,7 @@ function Dashboard() {
                   className="alert alert-danger alert-dismissible fade show mt-1"
                   role="alert"
                 >
-                  Your order has been deleted successfully
+                  Your item has been removed from the cart.
                   <button className="close" type="button" data-dismiss="alert">
                     <span>&times;</span>
                   </button>
@@ -175,13 +194,14 @@ function Dashboard() {
             ) : (
               ""
             )}
-            {OrderService.getCart(orders).length === 0 ? (
-              <div className="text-danger">Empty Cart</div>
+
+            {OrdersService.getCart(orders).length === 0 ? (
+              <div className="text-danger">No products in your cart</div>
             ) : (
               ""
             )}
 
-            {OrderService.getCart(orders).map((ord) => {
+            {OrdersService.getCart(orders).map((ord) => {
               return (
                 <Order
                   key={ord.id}
@@ -192,13 +212,13 @@ function Dashboard() {
                   quantity={ord.quantity}
                   productName={ord.product.productName}
                   price={ord.product.price}
-                  rating={ord.product.rating}
                   onBuyNowClick={onBuyNowClick}
                   onDeleteClick={onDeleteClick}
                 />
               );
             })}
           </div>
+          {/* cart ends*/}
         </div>
       </div>
     </div>

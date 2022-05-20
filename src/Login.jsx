@@ -3,10 +3,10 @@ import { UserContext } from "./UserContext";
 import { useNavigate } from "react-router-dom";
 
 let Login = (props) => {
+  const navigate = useNavigate();
   var [email, setEmail] = useState("scott@test.com");
   var [password, setPassword] = useState("Scott123");
   let userContext = useContext(UserContext);
-  const navigate = useNavigate();
 
   let [dirty, setDirty] = useState({
     email: false,
@@ -37,14 +37,14 @@ let Login = (props) => {
 
   //executes only once - on initial render =  componentDidMount
   useEffect(() => {
-    document.title = "Login - eBazar";
+    document.title = "Login - eCommerce";
   }, []);
 
   //executes only once - on component unmounting phase = componentWillUnmount
   useEffect(() => {
     //do something
     return () => {
-      // console.log("Component Unmount");
+      console.log("Component Unmount");
     };
   }, []);
 
