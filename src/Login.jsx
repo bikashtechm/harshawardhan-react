@@ -120,10 +120,15 @@ let Login = (props) => {
             isLoggedIn: true,
             currentUserName: responseBody[0].fullName,
             currentUserId: responseBody[0].id,
+            currentUserRole: responseBody[0].role,
           });
 
           //redirect to /dashboard
-          navigate("/dashboard");
+          if (responseBody[0].role === "user") {
+            navigate("/dashboard");
+          } else {
+            navigate("/products");
+          }
         } else {
           setLoginMessage(
             <span className="text-danger">Invalid Login, please try again</span>

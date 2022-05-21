@@ -13,6 +13,7 @@ let NavBar = () => {
       isLoggedIn: false,
       currentUserId: null,
       currentUserName: null,
+      currentUserRole: null,
     });
 
     window.location.hash = "/";
@@ -37,7 +38,8 @@ let NavBar = () => {
 
       <div className="collapse navbar-collapse" id="navbarSupportedContent">
         <ul className="navbar-nav mr-auto">
-          {userContext.user.isLoggedIn ? (
+          {userContext.user.isLoggedIn &&
+          userContext.user.currentUserRole === "user" ? (
             <li className="nav-item navData.isActive">
               <NavLink className="nav-link" to="/dashboard">
                 <i className="fa fa-dashboard"></i> Dashboard
@@ -47,10 +49,22 @@ let NavBar = () => {
             ""
           )}
 
-          {userContext.user.isLoggedIn ? (
+          {userContext.user.isLoggedIn &&
+          userContext.user.currentUserRole === "user" ? (
             <li className="nav-item navData.isActive">
               <NavLink className="nav-link" to="/store">
                 <i className="fa fa-shopping-bag"></i> Store
+              </NavLink>
+            </li>
+          ) : (
+            ""
+          )}
+
+          {userContext.user.isLoggedIn &&
+          userContext.user.currentUserRole === "admin" ? (
+            <li className="nav-item navData.isActive">
+              <NavLink className="nav-link" to="/products">
+                <i className="fa fa-suitcase"></i> Products
               </NavLink>
             </li>
           ) : (
