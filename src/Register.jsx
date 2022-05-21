@@ -127,7 +127,7 @@ let Register = (props) => {
 
   //executes only once - on initial render =  componentDidMount
   useEffect(() => {
-    document.title = "Register - eCommerce";
+    document.title = "Register - eBazar";
   }, []);
 
   //executes when the user clicks on Register button

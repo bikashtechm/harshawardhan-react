@@ -37,7 +37,7 @@ let Login = (props) => {
 
   //executes only once - on initial render =  componentDidMount
   useEffect(() => {
-    document.title = "Login - eCommerce";
+    document.title = "Login - eBazar";
   }, []);
 
   //executes only once - on component unmounting phase = componentWillUnmount

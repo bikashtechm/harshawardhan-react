@@ -45,7 +45,7 @@ function Dashboard() {
 
   //executes only once - on initial render =  componentDidMount
   useEffect(() => {
-    document.title = "Dashboard - eCommerce";
+    document.title = "Dashboard - eBazar";
 
     loadDataFromDatabase();
   }, [userContext.user.currentUserId, loadDataFromDatabase]);
@@ -122,12 +122,12 @@ function Dashboard() {
         <div className="row">
           {/* previous orders starts*/}
           <div className="col-lg-6">
-            <h4 className="py-2 my-2 text-info border-bottom border-info">
+            <h5 className="py-2 my-2 text-info border-bottom border-info">
               <i className="fa fa-history"></i> Previous Orders{" "}
               <span className="badge badge-info">
                 {OrdersService.getPreviousOrders(orders).length}
               </span>
-            </h4>
+            </h5>
 
             {OrdersService.getPreviousOrders(orders).length === 0 ? (
               <div className="text-danger">No Orders</div>
@@ -156,12 +156,12 @@ function Dashboard() {
 
           {/* cart starts*/}
           <div className="col-lg-6">
-            <h4 className="py-2 my-2 text-primary border-bottom border-primary">
+            <h5 className="py-2 my-2 text-primary border-bottom border-primary">
               <i className="fa fa-shopping-cart"></i> Cart{" "}
               <span className="badge badge-primary">
                 {OrdersService.getCart(orders).length}
               </span>
-            </h4>
+            </h5>
 
             {showOrderPlacedAlert ? (
               <div className="col-12">

@@ -8,7 +8,7 @@ function Product(props) {
       <div className="card m-1">
         <div className="card-body">
           <h5>
-            <i className="fa fa-arrow-right"></i> {prod.productName}
+            <i className="fa fa-paw"></i> {prod.productName}
           </h5>
 
           <div>${prod.price.toFixed(2)}</div>

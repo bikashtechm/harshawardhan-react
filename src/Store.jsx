@@ -56,7 +56,7 @@ function Store() {
 
         setProducts(productsResponseBody);
         setProductsToShow(productsResponseBody);
-        document.title = "Store - eCommerce";
+        document.title = "Store - eBazar";
       }
     })();
   }, [search]);

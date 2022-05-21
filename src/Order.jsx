@@ -6,7 +6,7 @@ function Order(props) {
     <div className="card my-2 shadow">
       <div className="card-body">
         <h6>
-          <i className="fa fa-arrow-right"></i> {props.productName}
+          <i className="fa fa-paw"></i> {props.productName}
           {props.isPaymentCompleted === false ? (
             <div className="float-right">
               <button
