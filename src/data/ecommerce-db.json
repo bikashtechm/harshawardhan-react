@@ -106,13 +106,15 @@
       "id": 1,
       "email": "scott@test.com",
       "fullName": "Scott Shaw",
-      "password": "Scott123"
+      "password": "Scott123",
+      "role": "user"
     },
     {
       "id": 2,
       "email": "allen@test.com",
       "fullName": "Allen Shaw",
-      "password": "allen123"
+      "password": "allen123",
+      "role": "user"
     },
     {
       "email": "aarav@gmail.com",
@@ -122,7 +124,8 @@
       "gender": "male",
       "country": "India",
       "receiveNewsLetters": true,
-      "id": 3
+      "id": 3,
+      "role": "user"
     },
     {
       "email": "saraswati101k@gmail.com",
@@ -132,7 +135,19 @@
       "gender": "female",
       "country": "4",
       "receiveNewsLetters": true,
-      "id": 4
+      "id": 4,
+      "role": "user"
+    },
+    {
+      "email": "admin@gmail.com",
+      "password": "Admin@2020",
+      "fullName": "Admin Shaw",
+      "dateOfBirth": "2007-05-05",
+      "gender": "male",
+      "country": "India",
+      "receiveNewsLetters": true,
+      "id": 5,
+      "role": "admin"
     }
   ],
   "orders": [
@@ -149,13 +164,6 @@
       "quantity": 1,
       "isPaymentCompleted": false,
       "id": 4
-    },
-    {
-      "userId": 1,
-      "productId": 6,
-      "quantity": 1,
-      "isPaymentCompleted": false,
-      "id": 5
     }
   ]
 }
