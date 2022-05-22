@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ProductsService, BrandsService, CategoriesService } from "./Service";
+import { BrandsService, CategoriesService } from "./Service";
 
 function ProductsLists(props) {
   let [search, setSearch] = useState("");
@@ -16,7 +16,10 @@ function ProductsLists(props) {
       let categoriesResponseBody = await categoriesResponse.json();
 
       // Get all Products
-      let productResponse = await ProductsService.fetchProducts();
+      let productResponse = await fetch(
+        `http://localhost:5000/products?productName_like=${search}`,
+        { method: "GET" }
+      );
       let productResponseBody = await productResponse.json();
 
       productResponseBody.forEach((prodItem) => {
@@ -35,7 +38,7 @@ function ProductsLists(props) {
 
       setProducts(productResponseBody);
     })();
-  }, []);
+  }, [search]);
 
   return (
     <div className="row">
@@ -83,7 +86,16 @@ function ProductsLists(props) {
                       <td>{prod.price}</td>
                       <td>{prod.brand.brandName}</td>
                       <td>{prod.category.categoryName}</td>
-                      <td>{}</td>
+                      <td>
+                        {[...Array(prod.rating).keys()].map((n) => {
+                          return (
+                            <i className="fa fa-star text-warning" key={n}></i>
+                          );
+                        })}
+                        {[...Array(5 - prod.rating).keys()].map((n) => {
+                          return <i className="fa fa-star-o text-" key={n}></i>;
+                        })}
+                      </td>
                     </tr>
                   );
                 })}
