@@ -4,6 +4,9 @@ import { BrandsService, CategoriesService } from "./Service";
 function ProductsLists(props) {
   let [search, setSearch] = useState("");
   let [products, setProducts] = useState([]);
+  let [originalProducts, setOriginalProducts] = useState([]);
+  let [sortBy, setSortBy] = useState("productName");
+  let [sortOrder, setSortOrder] = useState("ASC");
 
   useEffect(() => {
     (async () => {
@@ -17,7 +20,7 @@ function ProductsLists(props) {
 
       // Get all Products
       let productResponse = await fetch(
-        `http://localhost:5000/products?productName_like=${search}`,
+        `http://localhost:5000/products?productName_like=${search}&_sort=productName&_order=ASC`,
         { method: "GET" }
       );
       let productResponseBody = await productResponse.json();
@@ -37,6 +40,7 @@ function ProductsLists(props) {
       });
 
       setProducts(productResponseBody);
+      setOriginalProducts(productResponseBody);
     })();
   }, [search]);
 
