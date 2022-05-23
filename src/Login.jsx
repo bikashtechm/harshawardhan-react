@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import { UserContext } from "./UserContext";
 import { useNavigate } from "react-router-dom";
 
@@ -7,6 +7,7 @@ let Login = (props) => {
   var [email, setEmail] = useState("admin@gmail.com");
   var [password, setPassword] = useState("Admin@2020");
   let userContext = useContext(UserContext);
+  let myEmailRef = useRef();
 
   let [dirty, setDirty] = useState({
     email: false,
@@ -20,48 +21,33 @@ let Login = (props) => {
 
   let [loginMessage, setLoginMessage] = useState("");
 
-  //executes on each render (initial render & state updates)
-  useEffect(() => {
-    //console.log(email, password);
-  });
+  useEffect(() => {});
 
-  //executes only on state updates of "email" only (and also with initial render)
   useEffect(() => {
-    //validation on email only
     if (email.indexOf("@") > 0) {
-      //console.log("valid");
     } else {
-      //console.log("invalid");
     }
   }, [email]);
-
-  //executes only once - on initial render =  componentDidMount
   useEffect(() => {
     document.title = "Login - eBazar";
+    myEmailRef.current.focus();
   }, []);
 
-  //executes only once - on component unmounting phase = componentWillUnmount
   useEffect(() => {
-    //do something
     return () => {
       console.log("Component Unmount");
     };
   }, []);
 
-  //a function to validate email and password
   let validate = () => {
-    //variable to store errorsData
     let errorsData = {};
 
-    //email
     errorsData.email = [];
 
-    //email can't blank
     if (!email) {
       errorsData.email.push("Email can't be blank");
     }
 
-    //email regex
     let validEmailRegex = /\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/;
     if (email) {
       if (!validEmailRegex.test(email)) {
@@ -69,15 +55,12 @@ let Login = (props) => {
       }
     }
 
-    //password
     errorsData.password = [];
 
-    //password can't blank
     if (!password) {
       errorsData.password.push("Password can't be blank");
     }
 
-    //password regex
     let validPasswordRegex = /((?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,15})/;
     if (password) {
       if (!validPasswordRegex.test(password)) {
@@ -92,16 +75,13 @@ let Login = (props) => {
 
   useEffect(validate, [email, password]);
 
-  //When the user clicks on Login button
   let onLoginClick = async () => {
-    //set all controls as dirty
     let dirtyData = dirty;
     Object.keys(dirty).forEach((control) => {
       dirtyData[control] = true;
     });
     setDirty(dirtyData);
 
-    //call validate
     validate();
 
     if (isValid()) {
@@ -110,17 +90,16 @@ let Login = (props) => {
         { method: "GET" }
       );
       if (response.ok) {
-        //Status code is 200
         let responseBody = await response.json();
 
-        //set global state using context
         if (responseBody.length > 0) {
-          userContext.setUser({
-            ...userContext.user,
-            isLoggedIn: true,
-            currentUserName: responseBody[0].fullName,
-            currentUserId: responseBody[0].id,
-            currentUserRole: responseBody[0].role,
+          userContext.dispatch({
+            type: "login",
+            payload: {
+              currentUserName: responseBody[0].fullName,
+              currentUserId: responseBody[0].id,
+              currentUserRole: responseBody[0].role,
+            },
           });
 
           //redirect to /dashboard
@@ -183,6 +162,7 @@ let Login = (props) => {
                   validate();
                 }}
                 placeholder="Email"
+                ref={myEmailRef}
               />
 
               <div className="text-danger">

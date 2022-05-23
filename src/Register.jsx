@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import { UserContext } from "./UserContext";
 import { useNavigate } from "react-router-dom";
 
 let Register = (props) => {
+  let RegistrationRef = useRef();
   const navigate = useNavigate();
   let [state, setState] = useState({
     email: "",
@@ -128,6 +129,7 @@ let Register = (props) => {
   //executes only once - on initial render =  componentDidMount
   useEffect(() => {
     document.title = "Register - eBazar";
+    RegistrationRef.current.focus();
   }, []);
 
   //executes when the user clicks on Register button
@@ -162,12 +164,13 @@ let Register = (props) => {
       if (response.ok) {
         let responseBody = await response.json();
 
-        userContext.setUser({
-          ...userContext.user,
-          isLoggedIn: true,
-          currentUserName: responseBody.fullName,
-          currentUserId: responseBody.id,
-          currentUserRole: responseBody.role,
+        userContext.dispatch({
+          type: "login",
+          payload: {
+            currentUserName: responseBody[0].fullName,
+            currentUserId: responseBody[0].id,
+            currentUserRole: responseBody[0].role,
+          },
         });
 
         setMessage(
@@ -235,6 +238,7 @@ let Register = (props) => {
                   className="form-control"
                   name="email"
                   id="email"
+                  ref={RegistrationRef}
                   value={state.email}
                   onChange={(event) => {
                     setState({
